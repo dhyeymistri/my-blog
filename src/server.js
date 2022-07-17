@@ -3,19 +3,16 @@ import bodyParser from 'body-parser';
 import { MongoClient } from 'mongodb';
 import path, { dirname } from 'path';
 
-const uri = process.env.MONGODB_URI;
 
 const app = express();
 
 app.use(express.static(path.join(__dirname, '/build')));
 app.use(bodyParser.json());
 
-const client1 = new MongoClient(uri, { useUnifiedTopology: true });
-
 const withDB = async (operations, res) => {
     try {
 
-        const client = await client1.connect('mongodb://localhost:27017', { useNewUrlParser: true });
+        const client = await MongoClient.connect('mongodb://localhost:27017', { useNewUrlParser: true });
         const db = client.db('my-blog');
 
         await operations(db);
