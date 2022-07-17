@@ -8,11 +8,13 @@ const app = express();
 
 app.use(express.static(path.join(__dirname, '/build')));
 app.use(bodyParser.json());
+const uri = process.env.MONGODB_URI;
+const client1 = new MongoClient(uri, { useUnifiedTopology: true });
 
 const withDB = async (operations, res) => {
     try {
 
-        const client = await MongoClient.connect('mongodb://localhost:27017', { useNewUrlParser: true });
+        const client = await client1.connect('mongodb://localhost:27017', { useNewUrlParser: true });
         const db = client.db('my-blog');
 
         await operations(db);
